@@ -1,0 +1,16 @@
+{
+  "name": "zcode-sync",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Migrate a logged-in ZCode credential store between machines",
+  "license": "MIT",
+  "bin": {
+    "zcode-sync": "./zcode-sync.cjs"
+  },
+  "scripts": {
+    "test": "node test/run-all.cjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
