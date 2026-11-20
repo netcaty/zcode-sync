@@ -7,3 +7,9 @@ coverage/
 .DS_Store
 Thumbs.db
 test/tmp/
+
+# 本地试验脚本与导出凭据（含明文 token，绝不入库）
+wb-token-export/
+
+# 工作区本地配置/记忆
+.workbuddy/
