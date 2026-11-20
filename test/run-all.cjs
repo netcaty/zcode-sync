@@ -5,6 +5,7 @@ const path = require('path');
 
 const TESTS = [
   'unit.cjs',
+  'keyring-addon.cjs',
   'smoke.cjs',
   'process-smoke.cjs',
   'e2e-synthetic.cjs',
