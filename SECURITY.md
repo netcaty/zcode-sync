@@ -15,6 +15,7 @@
 - 口令错误只返回统一错误，不泄漏明文或部分结果。
 - 迁移包默认 0600（Windows 依赖用户目录 ACL）。
 - 没有口令时，攻击者拿到 `.zcs` 文件不能直接读取凭据。
+- 口令不走命令行参数（避免进入命令历史与进程列表）；只支持交互式隐藏输入、`--passphrase-file` 或 `ZCS_PASSPHRASE`（后者会提示风险）。
 
 ### 目标机
 
@@ -22,6 +23,11 @@
 - 工具通过 PowerShell P/Invoke 调用 `CredReadW` / `CredWriteW`，不把密钥放在命令行参数里；写入时通过 stdin 传给 PowerShell。
 - Windows Credential Manager target 与 ZCode 一致：`<account>.<service>`，UserName = account，blob 为 UTF-16LE；已用 ZCode 自带 keyring 原生模块双向验证。
 - 本工具不会删除 ZCode 的钥匙串条目；导入前会备份目标文件。
+
+### 日志与输出
+
+- 终端/日志只输出指纹前缀、key 名、账号展示信息；不输出 token、secret、密文。
+- 默认 `--mode os` 下，迁移包之外不会留下明文 token；备份仍是 ZCode 原格式密文。
 
 ### env 模式
 
