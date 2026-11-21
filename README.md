@@ -73,6 +73,7 @@ zcode-sync.cmd export -o - --passphrase-file pass.txt | ssh B "zcode-sync.cmd im
 | `doctor` | 只读诊断：环境、存储模式、钥匙串条目、能否解密 |
 | `status` | 当前登录摘要（不打印 token 明文） |
 | `export` | 导出加密迁移包 `.zcs` |
+| `export-json` | 导出明文 JSON token 文件（供未安装 ZCode 的机器用插件导入） |
 | `inspect` | 查看迁移包元信息（不显示 secret） |
 | `import` | 导入并重加密（支持 `--mode os\|env`、`--dry-run`、合并策略） |
 | `fix-keyring` | 修 ZCode 钥匙串原生模块加载失败（`zcode-sync.cmd` 会自动调用） |

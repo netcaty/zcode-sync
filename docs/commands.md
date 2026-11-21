@@ -4,6 +4,7 @@
 zcode-sync doctor   [--json] [--home DIR] [--credentials-file PATH]
 zcode-sync status   [--json] [--home DIR] [--credentials-file PATH]
 zcode-sync export   [-o FILE|-] [--include-device-id] [--allow-running] [--force]
+zcode-sync export-json [-o FILE|-] [--allow-running] [--force]
 zcode-sync inspect  FILE|- [--json]
 zcode-sync import   FILE|- [--dry-run] [--mode os|env] [--secret-file PATH]
                     [--device-id keep|clone] [--replace-all|--merge]
@@ -44,6 +45,19 @@ Windows 下用 `zcode-sync.cmd <命令>`；也可以直接 `node zcode-sync.cjs 
 - 默认在 ZCode 运行时只警告；`--allow-running` 跳过警告。
 - `--include-device-id` 把 `onboarding-record.json` 的 `deviceMid` 一起加密进包（默认不包含）。
 - `-o -` 输出二进制到 stdout，配合管道用。
+
+## export-json
+
+读取并解密当前凭据，生成**明文 JSON token 文件**，供**未安装 ZCode 的机器**使用：插件的「ZCode: 导入 JSON token 文件」登录方式直接读这个文件，目标机不需要 ZCode、也不需要钥匙串。
+
+- 文件格式与 `.zcs` 的 payload 相同：`{ format, createdAt, source, summary, credentials }`，其中 `credentials` 是解密后的明文 map。
+- 默认输出 `zcode-token.json`（0600）；`-o FILE` 指定路径，`-o -` 写 stdout（此时不能同时用 `--json`）。
+- 文件已存在时拒绝覆盖，需加 `--force`。
+- `deviceMid` **总是包含**（不象 `export` 需要 `--include-device-id`），因为目标机没有 `onboarding-record.json` 可读。
+- `--allow-running` 跳过「ZCode 正在运行」的警告；`--json` 输出结构化摘要。
+- 退出码：`1` 文件已存在（`FILE_EXISTS`）、`3` 未登录、`4` 钥匙串不可用、`6` 解密失败。
+
+**安全**：此文件无口令、含完整 token。请只通过可信渠道传输，导入后及时删除，不要提交到版本库。需要口令保护/长期保存请用 `export` 生成 `.zcs`。
 
 ## inspect
 

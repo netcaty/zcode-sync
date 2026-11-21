@@ -214,6 +214,37 @@ async function main() {
   );
   assert.deepStrictEqual(readEnvPlain(pipeTargetFile), PLAIN);
 
+  // export-json: plaintext token file for a machine without ZCode installed.
+  const TOKEN_FILE = path.join(ROOT, 'zcode-token.json');
+  const exportedJson = runCli([
+    'export-json', '--home', SOURCE_HOME, '-o', TOKEN_FILE, '--json',
+  ]);
+  assertSuccess(exportedJson, 'export-json');
+  const exportJsonResult = JSON.parse(exportedJson.stdout);
+  assert.strictEqual(exportJsonResult.ok, true);
+  assert.strictEqual(exportJsonResult.tokenFile.file, TOKEN_FILE);
+  const tokenFile = JSON.parse(fs.readFileSync(TOKEN_FILE, 'utf8'));
+  assert.strictEqual(tokenFile.format, 1);
+  assert.deepStrictEqual(tokenFile.credentials, PLAIN);
+  assert.strictEqual(tokenFile.source.keySource, 'env');
+
+  const overwrite = runCli([
+    'export-json', '--home', SOURCE_HOME, '-o', TOKEN_FILE, '--json',
+  ]);
+  assert.strictEqual(overwrite.status, 1, 'overwrite without --force should be refused');
+  assert.strictEqual(JSON.parse(overwrite.stdout).error.code, 'FILE_EXISTS');
+
+  const forced = runCli([
+    'export-json', '--home', SOURCE_HOME, '-o', TOKEN_FILE, '--force', '--json',
+  ]);
+  assertSuccess(forced, 'export-json --force');
+
+  const pipedJson = runCli([
+    'export-json', '--home', SOURCE_HOME, '-o', '-',
+  ]);
+  assertSuccess(pipedJson, 'export-json -o -');
+  assert.deepStrictEqual(JSON.parse(pipedJson.stdout).credentials, PLAIN);
+
   console.log('CLI E2E passed');
   console.log('workdir kept for inspection:', ROOT);
 }
