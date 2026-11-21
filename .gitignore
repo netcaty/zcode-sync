@@ -8,8 +8,8 @@ coverage/
 Thumbs.db
 test/tmp/
 
-# 本地试验脚本与导出凭据（含明文 token，绝不入库）
-wb-token-export/
+# WorkBuddy 导出脚本可入库，但它导出的 JSON 含明文 token，绝不入库
+wb-token-export/*.json
 
 # 工作区本地配置/记忆
 .workbuddy/
